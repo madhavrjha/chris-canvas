@@ -1,75 +1,58 @@
-let canvas = document.querySelector('canvas')
+const canvas = document.querySelector('canvas')
 
-canvas.height = innerHeight
 canvas.width = innerWidth
+canvas.height = innerHeight
 
-let c = canvas.getContext('2d')
+const c = canvas.getContext('2d')
 
-let circles = []
-const colors = ['vilot', 'indigo', 'blue', 'green', 'yellow', 'orange', 'red', 'silver']
+function Circle(x, y, dx, dy, r) {
+	this.x = x
+	this.y = y
+	this.dx = dx
+	this.dy = dy
+	this.r = r
 
-for (let i = 1; i <= 100; i++) {
-	circles.push({
-		x: 100 + Math.floor(Math.random() * innerWidth - 100),
-		y: 100 + Math.floor(Math.random() * innerHeight - 100),
-		dx: 5 + Math.floor(Math.random() * 25),
-		dy: 5 + Math.floor(Math.random() * 25),
-		r: 20 + Math.floor(Math.random() * 50),
-		strokeStyle: colors[Math.floor(Math.random() * colors.length)],
-		fillStyle: colors[Math.floor(Math.random() * colors.length)],
-	})
+	this.draw = function () {
+		c.beginPath()
+		c.arc(this.x, this.y, this.r, 0, Math.PI * 2)
+		c.strokeStyle = 'black'
+		c.stroke()
+	}
+
+	this.update = function () {
+		if (this.x + this.r >= innerWidth || this.x - this.r <= 0) {
+			this.dx = -this.dx
+		}
+
+		if (this.y + this.r >= innerHeight || this.y - this.r <= 0) {
+			this.dy = -this.dy
+		}
+
+		this.x += this.dx
+		this.y += this.dy
+	}
 }
 
-let x = Math.floor(Math.random() * innerWidth)
-let y = Math.floor(Math.random() * innerHeight)
-let dx = 20
-let dy = 20
-let r = 20 + Math.floor(Math.random() * 50)
+let circleArray = []
+
+for (let i = 1; i <= 1000; i++) {
+	let r = 5 + Math.floor(Math.random() * 20)
+	let x = r + Math.floor(Math.random() * (innerWidth - r * 2))
+	let y = r + Math.floor(Math.random() * (innerHeight - r * 2))
+	let dx = (Math.random() - 0.5) * Math.floor(Math.random() * 10)
+	let dy = (Math.random() - 0.5) * Math.floor(Math.random() * 10)
+	circleArray.push(new Circle(x, y, dx, dy, r))
+}
 
 function animate() {
 	requestAnimationFrame(animate)
-	console.log(1)
+
 	c.clearRect(0, 0, innerWidth, innerHeight)
 
-	for (let i = 0; i < circles.length; i++) {
-		const { x, y, dx, dy, r, strokeStyle, fillStyle } = circles[i]
-
-		c.beginPath()
-		c.arc(x, y, r, 0, Math.PI * 2)
-		c.strokeStyle = strokeStyle
-		c.fillStyle = fillStyle
-		c.stroke()
-		c.fill()
-
-		if (x + r >= innerWidth || x - r <= 0) {
-			circles[i].dx = -dx
-		}
-
-		if (y + r >= innerHeight || y - r <= 0) {
-			circles[i].dy = -dy
-		}
-
-		circles[i].x += circles[i].dx
-		circles[i].y += circles[i].dy
+	for (let i = 0; i < circleArray.length; i++) {
+		circleArray[i].draw()
+		circleArray[i].update()
 	}
-
-	// c.beginPath()
-	// c.arc(x, y, r, 0, Math.PI * 2)
-	// c.strokeStyle = 'blue'
-	// c.fillStyle = 'orange'
-	// c.stroke()
-	// c.fill()
-
-	// if (x + r >= innerWidth || x - r <= 0) {
-	// 	dx = -dx
-	// }
-
-	// if (y + r >= innerHeight || y - r <= 0) {
-	// 	dy = -dy
-	// }
-
-	// x += dx
-	// y += dy
 }
 
 animate()
