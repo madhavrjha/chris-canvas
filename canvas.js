@@ -18,6 +18,7 @@ function Circle(x, y, dx, dy, r) {
 	this.dx = dx
 	this.dy = dy
 	this.r = r
+	this.minR = r
 	this.color = colors[Math.floor(Math.random() * colors.length)]
 
 	this.draw = function () {
@@ -40,12 +41,25 @@ function Circle(x, y, dx, dy, r) {
 
 		this.x += this.dx
 		this.y += this.dy
+
+		// interactivity
+		let distance = Math.sqrt(Math.pow(mouse.x - this.x, 2) + Math.pow(mouse.y - this.y, 2))
+		console.log(distance)
+		if (distance <= 120) {
+			if (this.r < 30) {
+				this.r += 1
+			}
+		} else {
+			if (this.r > this.minR) {
+				this.r -= 1
+			}
+		}
 	}
 }
 
 const circleArray = []
 
-for (let i = 1; i <= 500; i++) {
+for (let i = 1; i <= 900; i++) {
 	let r = Math.floor(Math.random() * 5) + 5
 	let x = r + Math.floor(Math.random() * (innerWidth - r * 2))
 	let y = r + Math.floor(Math.random() * (innerHeight - r * 2))
